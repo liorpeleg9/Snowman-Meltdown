@@ -46,29 +46,36 @@ def is_word_guessed(secret_word: str, guessed_letters: set[str]) -> bool:
 
 
 def play_game() -> None:
-    """Run the full Snowman Meltdown game loop until win or loss."""
-    secret_word = get_random_word()
-    guessed_letters: set[str] = set()
-    mistakes = 0
-    max_mistakes = len(STAGES) - 1
-
+    """Run the Snowman Meltdown game loop and offer replay."""
     print("Welcome to Snowman Meltdown!")
 
     while True:
-        display_game_state(mistakes, secret_word, guessed_letters)
+        secret_word = get_random_word()
+        guessed_letters: set[str] = set()
+        mistakes = 0
+        max_mistakes = len(STAGES) - 1
 
-        guess = get_guess(guessed_letters)
-        guessed_letters.add(guess)
+        while True:
+            display_game_state(mistakes, secret_word, guessed_letters)
 
-        if guess in secret_word:
-            print("✅ Correct!\n")
-            if is_word_guessed(secret_word, guessed_letters):
-                print(f"🎉 You saved the snowman! The word was '{secret_word}'.")
-                break
-        else:
-            mistakes += 1
-            print("❌ Wrong!\n")
-            if mistakes >= max_mistakes:
-                display_game_state(mistakes, secret_word, guessed_letters)
-                print(f"☠️ The snowman melted... The word was '{secret_word}'.")
-                break
+            guess = get_guess(guessed_letters)
+            guessed_letters.add(guess)
+
+            if guess in secret_word:
+                print("✅ Correct!\n")
+                if is_word_guessed(secret_word, guessed_letters):
+                    print(f"🎉 You saved the snowman! The word was '{secret_word}'.")
+                    break
+            else:
+                mistakes += 1
+                print("❌ Wrong!\n")
+                if mistakes >= max_mistakes:
+                    display_game_state(mistakes, secret_word, guessed_letters)
+                    print(f"☠️ The snowman melted... The word was '{secret_word}'.")
+                    break
+
+        again = input("Play again? (y/n): ").strip().lower()
+        if again != "y":
+            print("Thanks for playing!")
+            break
+        print()
